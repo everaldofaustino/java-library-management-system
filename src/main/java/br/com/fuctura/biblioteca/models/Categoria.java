@@ -21,6 +21,7 @@ public class Categoria {
     private String descricao;
 
     @OneToMany(mappedBy = "categoria")
+
     private List<Livro> livros = new ArrayList<>();
 
     public Categoria(Integer id, String nome, String descricao) {

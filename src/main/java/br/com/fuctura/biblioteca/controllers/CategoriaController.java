@@ -3,10 +3,9 @@ package br.com.fuctura.biblioteca.controllers;
 import br.com.fuctura.biblioteca.dtos.CategoriaDto;
 import br.com.fuctura.biblioteca.models.Categoria;
 import br.com.fuctura.biblioteca.services.CategoriaService;
-import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,15 +44,15 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoriaDto> salvar(@RequestBody CategoriaDto categoriaDto) {
+    public ResponseEntity<CategoriaDto> salvar(@RequestBody @Valid CategoriaDto categoriaDto) {
         Categoria cat = categoriaService.salvar(modelMapper.map(categoriaDto, Categoria.class));
         return ResponseEntity.ok().body(modelMapper.map(cat, CategoriaDto.class));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoriaDto> atualizar(@PathVariable Integer id, @RequestBody CategoriaDto categoriaDto){
+    public ResponseEntity<CategoriaDto> atualizar(@PathVariable Integer id, @RequestBody @Valid CategoriaDto categoriaDto){
         categoriaDto.setId(id);
-        Categoria cat = categoriaService.salvar(modelMapper.map(categoriaDto, Categoria.class));
+        Categoria cat = categoriaService.atualizar(modelMapper.map(categoriaDto, Categoria.class));
         return ResponseEntity.ok().body(modelMapper.map(cat, CategoriaDto.class));
     }
 
