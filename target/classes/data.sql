@@ -1,5 +1,5 @@
 -- Popula a tabela CATEGORIA
-INSERT INTO CATEGORIA (nome, descricao) VALUES ('Infórmatica', 'Livros de infórmatica');
+INSERT INTO CATEGORIA (nome, descricao) VALUES ('Informática', 'Livros de informática');
 INSERT INTO CATEGORIA (nome, descricao) VALUES ('Ficção científica', 'Livros de ficção científica');
 INSERT INTO CATEGORIA (nome, descricao) VALUES ('Terror', 'Livros de terror');
 

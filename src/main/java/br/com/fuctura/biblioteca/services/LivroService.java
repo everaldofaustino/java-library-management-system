@@ -1,5 +1,6 @@
 package br.com.fuctura.biblioteca.services;
 
+import br.com.fuctura.biblioteca.dtos.LivroDto;
 import br.com.fuctura.biblioteca.exceptions.ObjectNotFoundException;
 import br.com.fuctura.biblioteca.models.Categoria;
 import br.com.fuctura.biblioteca.models.Livro;
@@ -10,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -38,6 +40,12 @@ public class LivroService {
 
     }
 
+    public List<Livro> buscarPorNome(String nome){
+        categoriaService.buscarPorId(Integer.valueOf(nome));
+        List<Livro> list = livroRepository.findAllByCategoriaNome(nome);
+        return list;
+    }
+
     public List<Livro> buscarPorTitulo(String titulo) {
         List<Livro> list = livroRepository.findByTituloContainingIgnoreCase(titulo);
         if (!list.isEmpty()) {
@@ -47,11 +55,18 @@ public class LivroService {
     }
 
 
+    public Livro salvar(Livro livro,Integer categoriaId) {
 
+        // Verifica se já existe livro com este título
+        List<Livro> livrosComMesmoTitulo = livroRepository.findByTituloContainingIgnoreCase(livro.getTitulo());
+        if(!livrosComMesmoTitulo.isEmpty()){
+            throw new IllegalArgumentException("Livro já cadastrado com este nome: " + livro.getTitulo());
+        }
+        livro.setId(null);
+        Categoria categoria = categoriaService.buscarPorId(categoriaId);
+        livro.setCategoria(categoria);
 
-    public Livro salvar(Livro livro) {
-        Livro livro1 = livroRepository.save(livro);
-        return livro1;
+        return livroRepository.save(livro);
     }
 
 
@@ -61,7 +76,19 @@ public class LivroService {
         livroRepository.deleteById(id);
     }
 
+    /*public Livro atualizar(Livro livro) {
+        buscarPorId(livro.getId());
+        procurarPorTitulo(livro);
+        Livro livro1 = livroRepository.save(livro);
+        return livro1;
+    }*/
 
+    public Livro atualizar(Livro livro, Integer categoriaId){
+        buscarPorId(livro.getId());
+        Categoria categoria = categoriaService.buscarPorId(categoriaId);
+        livro.setCategoria((categoria));
+        return livroRepository.save(livro);
+    }
 
 
 
@@ -74,7 +101,20 @@ public class LivroService {
         throw new ObjectNotFoundException("Não existem livros cadastrados");
     }
 
+    private void procurarPorTitulo(Livro livro) {
+        List<Livro> livroEntity = livroRepository.findByTituloContainingIgnoreCase(livro.getTitulo());
+        if (!livroEntity.isEmpty()) {
+            if (!Objects.equals(livroEntity.get(0).getTitulo(), livro.getId())) {
+                throw new IllegalArgumentException("Livro já cadastrado com este nome: " + livro.getTitulo());
+
+            }
+        }
+    }
 
 
+    public List<Livro> buscarPorNomeCategoria(String nomeCategoria) {
+        return livroRepository.findAllByCategoriaNome(nomeCategoria);
 
+
+    }
 }

@@ -23,8 +23,7 @@ public class LivroDto {
     private String autor;
     private String texto;
     private Edicao edicao;
-    private Integer categoriaId;
-    private CategoriaDto categoria;
+    private Categoria categoria;
 
 
 
@@ -35,9 +34,9 @@ public class LivroDto {
         this.autor = livro.getAutor();
         this.texto = livro.getTexto();
         this.edicao = livro.getEdicao();
-        this.categoria = new CategoriaDto(livro.getCategoria()
+        this.categoria = livro.getCategoria();
 
-        );
+
     }
 
 

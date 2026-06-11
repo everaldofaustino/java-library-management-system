@@ -27,6 +27,7 @@ public class CategoriaDto {
         this.descricao = descricao;
     }
 
+
     public CategoriaDto(Categoria categoria) {
         this.id = categoria.getId();
         this.nome = categoria.getNome();
