@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValidationErros extends StandardError {
+public class ValidationErrors extends StandardError {
 
     List<FieldErrors> erros = new ArrayList<>();
 
 
-    public ValidationErros(LocalDateTime timestamp, Integer status, String error, String path) {
+    public ValidationErrors(LocalDateTime timestamp, Integer status, String error, String path) {
         super(timestamp, status, error, path);
     }
 

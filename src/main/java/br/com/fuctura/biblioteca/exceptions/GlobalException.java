@@ -1,9 +1,11 @@
 package br.com.fuctura.biblioteca.exceptions;
 
 import jakarta.servlet.http.HttpServletRequest;
+//import org.springframework.boot.context.properties.bind.validation.ValidationErrors;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -39,9 +41,9 @@ public class GlobalException {
 
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ValidationErros> mMethodArgumentNotValidException(MethodArgumentNotValidException e,
-                                                                            HttpServletRequest request){
-        ValidationErros ve = new ValidationErros(LocalDateTime.now(),HttpStatus.BAD_REQUEST.value(),
+    public ResponseEntity<ValidationErrors> mMethodArgumentNotValidException(MethodArgumentNotValidException e,
+                                                                             HttpServletRequest request){
+        ValidationErrors ve = new ValidationErrors(LocalDateTime.now(),HttpStatus.BAD_REQUEST.value(),
                 "Erro na validação dos campos",request.getRequestURI());
         for (FieldError err : e.getBindingResult().getFieldErrors()){
             ve.addErrors(err.getField(),err.getDefaultMessage());
@@ -49,4 +51,20 @@ public class GlobalException {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ve);
     }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<StandardError> handleHttpMessageNotReadable(
+            HttpMessageNotReadableException e,
+            HttpServletRequest request) {
+
+        StandardError error = new StandardError(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Valor inválido informado para um campo da requisição",
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+
+    }
+
 }

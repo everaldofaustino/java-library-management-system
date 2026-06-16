@@ -50,6 +50,15 @@ public class LivroController {
         LivroDto livroDto = modelMapper.map(cat, LivroDto.class);
         return ResponseEntity.ok().body(livroDto);
     }
+
+    @Operation(
+            summary = "Buscar livros por título",
+            description = "Retorna todos os livros que contenham o título informado"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso")
+    })
+
     //http://localhost:8082/livro/titulo/{nome}
     @GetMapping("/titulo/{nome}")
     public ResponseEntity<List<LivroDto>> buscarPorTitulo(@PathVariable String nome) {
@@ -57,6 +66,14 @@ public class LivroController {
         return ResponseEntity.ok().body(list.stream().map(x -> modelMapper.
                 map(x, LivroDto.class)).collect(Collectors.toList()));
     }
+
+    @Operation(
+            summary = "Listar todos os livros",
+            description = "Retorna todos os livros cadastrados"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso")
+    })
 
     //http://localhost:8082/livro/todos
     @GetMapping("/todos")
@@ -66,6 +83,15 @@ public class LivroController {
                 map(x, LivroDto.class)).collect(Collectors.toList()));
     }
 
+    @Operation(
+            summary = "Cadastrar livro",
+            description = "Cria um novo livro associado a uma categoria"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Livro criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "404", description = "Categoria não encontrada")
+    })
     //POST http://localhost:8082/livro?categoria=id
     @PostMapping
     public  ResponseEntity<LivroDto> salvar(@RequestParam(value = "categoria",defaultValue = "0") Integer categoriaId,
@@ -76,6 +102,16 @@ public class LivroController {
         return ResponseEntity.ok().body(new LivroDto(livro1));
 
     }
+
+    @Operation(
+            summary = "Atualizar livro",
+            description = "Atualiza um livro existente"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Livro atualizado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Livro não encontrado")
+    })
+
 
 //PUT http://localhost:8082/livro/{id}?categoria=id
     @PutMapping("/{id}")
@@ -91,7 +127,14 @@ public class LivroController {
 
     }
 
-
+    @Operation(
+            summary = "Buscar livros por categoria",
+            description = "Retorna todos os livros de uma categoria específica"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Categoria não encontrada")
+    })
     //http://localhost:8082/livro?categoria=id
     @GetMapping
     public ResponseEntity<List<LivroDto>> buscarTodosPorCategoria(@RequestParam(value = "categoria", defaultValue = "0")Integer categoriaId){
@@ -99,13 +142,28 @@ public class LivroController {
         return ResponseEntity.ok().body(list.stream().map(x-> new LivroDto(x)).toList());
     }
 
+    @Operation(
+            summary = "Buscar livros pelo nome da categoria",
+            description = "Retorna todos os livros pertencentes à categoria informada"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso")
+    })
+
     @GetMapping("/categoria/nome/{nome}")
     public ResponseEntity<List<LivroDto>> buscarTodosPorNome(@PathVariable(value = "nome", required = false)String nomeCategoria){
         List<Livro> list = livroService.buscarPorNomeCategoria(nomeCategoria);
         return ResponseEntity.ok().body(list.stream().map(x-> new LivroDto(x)).toList());
     }
 
-
+    @Operation(
+            summary = "Excluir livro",
+            description = "Remove um livro do sistema"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Livro removido com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Livro não encontrado")
+    })
 
     //http://localhost:8082/livro/{id}
     @DeleteMapping("/{id}")
