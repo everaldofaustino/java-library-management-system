@@ -480,6 +480,27 @@ java -jar target/biblioteca.jar
 
 ---
 
+## ⚠️ Validação de Campos
+
+A API utiliza Bean Validation (`@Valid`) para validar os dados recebidos.
+
+Exemplo de resposta:
+
+```json
+{
+  "timestamp": "16/06/2026 11:00:00",
+  "status": 400,
+  "error": "Erro na validação dos campos",
+  "path": "/livro",
+  "erros": [
+    {
+      "fieldName": "titulo",
+      "message": "Título é obrigatório"
+    }
+  ]
+}
+```
+
 # 👨‍💻 Autor
 
 **Everaldo Faustino**
